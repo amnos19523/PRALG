@@ -34,7 +34,6 @@ char Matrice::affiche(){
       int columns, rows;
       columns=0;
       rows=0;
-
         // Get the console screen buffer info
       if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi)) {
           columns = csbi.srWindow.Right - csbi.srWindow.Left + 1;
@@ -56,7 +55,8 @@ char Matrice::affiche(){
         }
     };
     if ((element_size+3)*C>(window_length-5) || window_height < (L+4)){
-        printf("the matrix may not display properly \n");
+        printf("the matrix may not display properly \nIf you are on Windows, try execute it on cmd ! (after building it not directly on Qt because of dlls.) \n");
+        printf("If you are on Linux, just launch build.sh and execute the project in Build folder\n");
     }
     
     element_size+=2;
