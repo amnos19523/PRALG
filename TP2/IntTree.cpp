@@ -53,12 +53,14 @@ int IntTree::depth(){
     }
     else{
         int depth = 1;
-        for (int k; k<children.size(); k++){
-            if ((*children[k]).depth()>depth){
-                depth = (*children[k]).depth();
+        for (int k=0; k<children.size(); k++){
+            int d = (*children[k]).depth();
+            if (d>depth){
+                depth = d;
             }
         }
-        return depth+1;
+        depth +=1;
+        return depth;
     }
 }
 
@@ -68,12 +70,12 @@ int** IntTree::get_tree_list(){
 
     int initial_depth = depth();
 
-    int** list = new int*[initial_depth+2];
-    list[initial_depth+1] = new int[initial_depth+2];
+    int** list = new int*[initial_depth+1];
+    list[initial_depth] = new int[initial_depth];
     list[0]= new int [1];
     list[0][0]= getData();
-    list[initial_depth+1][0]=1;
-    if (initial_depth == 0 ){
+    list[initial_depth][0]=1;
+    if (initial_depth == 1 ){
         return list;
     }
     //initialize next_stage
@@ -86,15 +88,15 @@ int** IntTree::get_tree_list(){
     for (int k=0; k<stage_size; k++){
         list[1][k]= (*this_stage[k]).getData();
     }
-    list[initial_depth+1][1]=stage_size;
-    if (initial_depth==1){
+    list[initial_depth][1]=stage_size;
+    if (initial_depth==2){
         return list;
     }
     // search every stage 
     int next_stage_size = 0;
     IntTree** next_stage = nullptr;
     int counter;
-    for (int k=2; k<initial_depth+1; k++){
+    for (int k=2; k<initial_depth; k++){
         // define new stage size
         next_stage_size = 0;
         for (int l=0; l<stage_size; l++){
@@ -118,7 +120,7 @@ int** IntTree::get_tree_list(){
         }
         // delete this_stage
         this_stage = next_stage;
-        list[initial_depth+1][k]=next_stage_size;
+        list[initial_depth][k]=next_stage_size;
     }
     return list;
 }
@@ -126,8 +128,8 @@ int** IntTree::get_tree_list(){
 
 void IntTree::visTreeIm(){
     int* tree_size = nullptr;
-    tree_size = get_tree_list()[depth()+1];
-    for (int k =0; k<depth()+1;k++){
+    tree_size = get_tree_list()[depth()];
+    for (int k =0; k<depth();k++){
         printf("\n");
         for (int l =0; l<tree_size[k]; l++){
             printf("%d |", get_tree_list()[k][l]);
