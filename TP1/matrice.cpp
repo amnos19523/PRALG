@@ -38,6 +38,7 @@ Matrice::Matrice(const Matrice& copy){
     count=new int;
     count = copy.count;
     (*count)++;
+    tab = copy.tab;
     L=copy.L;
     C=copy.C;
     printf("Matrix copied\n");
@@ -64,7 +65,7 @@ void Matrice::resize(int a, int b){
             NewMatrix[c+(C*l)] = 0;
         }
     }
-    if (*count == 0){
+    if (*count == 1){
         double* to_delete = tab;
         tab = NewMatrix;
         delete[] to_delete;
@@ -162,7 +163,6 @@ Matrice Matrice::operator*(const Matrice& factor){
         printf("verify your matrix sizes");
         throw "multiplication impossible";
     }
-    (*product.count)++;
     return product;
 }
 
