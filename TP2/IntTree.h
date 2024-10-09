@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <string>
 
 // Node of a tree containing an integer at each node
 class IntTree {
@@ -29,6 +30,10 @@ public:
     void removeLastChild();
     // return depth
     int depth();
+    //parcours en profondeur
+    void display(std::string prefix="*" , std::string indent="  ")const;
+    // get size at bottom
+    int get_tree_widest_size();
     //list of data in Tree
     int** get_tree_list();
     //makestring
