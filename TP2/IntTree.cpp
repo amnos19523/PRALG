@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 IntTree::IntTree(){
+    data = 0;
 }
 
 IntTree::IntTree(int d){
@@ -31,7 +32,7 @@ int IntTree::nbChildren()const{
 }
 
 IntTree* IntTree::getChild(int pos){//possible faute de position
-    if ((pos>=children.size())||(pos<0)){
+    if ((pos>=children.size())||(pos    <0)){
         std::cerr << "invalid position" << std::endl;
         exit(1);
     }
@@ -62,6 +63,7 @@ void IntTree::removeLastChild(){//vérifier s'il existe
     }
     else {
         std::cerr << "Children is void" << std::endl;
+        exit(1);
     }
 }
 
