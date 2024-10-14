@@ -2,6 +2,7 @@
 #include <vector>
 #include <stdio.h>
 #include <iostream>
+#include <stdlib.h>
 
 IntTree::IntTree(){
 }
@@ -29,23 +30,39 @@ int IntTree::nbChildren()const{
     return children.size();
 }
 
-IntTree* IntTree::getChild(int pos){
+IntTree* IntTree::getChild(int pos){//possible faute de position
+    if ((pos>=children.size())||(pos<0)){
+        std::cerr << "invalid position" << std::endl;
+        exit(1);
+    }
     return children[pos];
 }
 
-void IntTree::setChild(int pos, IntTree* NewChild){
+void IntTree::setChild(int pos, IntTree* NewChild){// faute position
+    if ((pos>children.size())||(pos<0)){
+        std::cerr << "invalid position" << std::endl;
+        exit(1);
+    }
     children.push_back(children[pos]);
-    children[pos]=NewChild;
+    for (int k = children.size()-1; k > pos; k--){
+        children[k]=children[k-1];
+    }
+    children[pos] = NewChild;
+    
 }
 
 void IntTree::addAsLastChild(IntTree* NewChild){
     children.push_back(NewChild);
 }
 
-void IntTree::removeLastChild(){
-    //delete children.back();
-    children.back()=nullptr;
-    children.pop_back();
+void IntTree::removeLastChild(){//vérifier s'il existe
+    if (children.size()!=0){
+        children.back()=nullptr;
+        children.pop_back();
+    }
+    else {
+        std::cerr << "Children is void" << std::endl;
+    }
 }
 
 int IntTree::depth(){
@@ -76,7 +93,7 @@ void IntTree::display(std::string prefix, std::string indent) const{
 
 
 
-int** IntTree::get_tree_list(){
+int** IntTree::get_tree_list(){// autre chose inutile
 
     int initial_depth = depth();
 
@@ -143,7 +160,7 @@ int** IntTree::get_tree_list(){
 
 
 
-int IntTree::get_tree_widest_size(){
+int IntTree::get_tree_widest_size(){ // inutile aussi 
     int max = 0;
     int comp;
     int** tree = get_tree_list();
@@ -157,7 +174,7 @@ int IntTree::get_tree_widest_size(){
 }
 
 
-void IntTree::visTreeIm(){
+void IntTree::visTreeIm(){ //inutile
     int* tree_size = nullptr;
     int space;
     int** tree = get_tree_list();

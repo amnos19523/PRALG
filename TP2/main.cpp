@@ -10,6 +10,8 @@ int main(){
     root->addAsLastChild(new IntTree(23));
     root->getChild(1)->addAsLastChild(new IntTree(17));
     root->getChild(1)->getChild(0)->addAsLastChild(new IntTree(15));
+    IntTree* add = new IntTree(1);
+    root->setChild(1, add);
 
     root->visTreeIm();
     root->display();
