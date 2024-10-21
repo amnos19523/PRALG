@@ -19,12 +19,25 @@ class Eleve{
 };
 
 class CompareNom{
-        std::vector<Eleve> classe;
-    public: 
-        CompareNom(std::vector<Eleve> liste){
-            classe.reserve(liste.size());
-            for (int k=0; k < liste.size();k++){
-                classe.push_back(liste.at(k))
-            }
-        }
-}
+    private: 
+        int* ptr;
+    public:
+        CompareNom(): ptr(new int(0)){}
+        CompareNom(int& compteur){ptr = &compteur;}
+        bool operator()(Eleve i, Eleve j)const {
+            (*ptr)++;
+            return i.nom() < j.nom();
+            };
+};
+
+class CompareNote{
+    private:
+        int* ptr;
+    public:
+    CompareNote(): ptr(new int(0)){}
+    CompareNote(int& compteur){ptr = &compteur;}
+        bool operator()(Eleve i, Eleve j)const {
+            (*ptr)++;
+            return i.note() > j.note();
+            };
+};
