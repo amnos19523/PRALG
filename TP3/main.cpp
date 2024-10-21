@@ -1,19 +1,18 @@
-#include "IntTree.h"
+#include "eleve.h"
+#include "functions.h"
 #include <stdio.h>
-#include<iostream>
+#include <iostream>
+#include <vector>
 
 int main(){
-    IntTree* root = new IntTree(12);
-    root->addAsLastChild(new IntTree(8));
-    root->getChild(0)->addAsLastChild(new IntTree(4));
-    root->getChild(0)->addAsLastChild(new IntTree(9));
-    root->addAsLastChild(new IntTree(23));
-    root->getChild(1)->addAsLastChild(new IntTree(17));
-    root->getChild(1)->getChild(0)->addAsLastChild(new IntTree(15));
-
-    root->visTreeIm();
-    root->display();
-    
-    delete root;
-    return 0;
+    srand(time(NULL));
+    Eleve Jean("Jean", 15);
+    Jean.afficher();
+    Jean.note()=12;
+    Jean.afficher();
+    std::vector<Eleve> classe(20);
+    std::cout<<gen_name()<<std::endl;
+    for (int k=0;k<20; k++){
+        classe[k].afficher();
+    }
 }
