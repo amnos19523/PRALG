@@ -277,7 +277,7 @@ int main(int argc, char **argv) {
 
     Image2 = new ::byte[width*height];
 
-    Decode_grey(Image2, im2, width, height, width, height, 0, 0, false, true); // put false to not make appear the little squares.
+    Decode_grey(Image2, im2, width, height, width, height, 0, 0, true, true); // put false to not make appear the little squares.
 
     // Display image
     Imagine::putGreyImage(0, 0, Image2, width, height);
