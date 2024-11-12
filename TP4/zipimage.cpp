@@ -227,20 +227,91 @@ int main(int argc, char **argv) {
     cout << "Image size: " << width << "x" << height << endl;
     cout << "Number of pixels: " << width*height << endl;
 
+
+
+
     // Display image
-    Imagine::Window window = Imagine::openWindow(width, height);
+    Imagine::Window window1 = Imagine::openWindow(width, height);
     Imagine::putGreyImage(0, 0, image, width, height);
 
     Imagine::endGraphics(); 
 
-    QuadTree<::byte>* im = Encode_grey(image, width, height, 0, 0, width, height, 100, true);
+    QuadTree<::byte>* im1 = Encode_grey(image, width, height, 0, 0, width, height, 100, true);
 
     //display<bool>(im);
 
     ::byte* Image2;
     Image2 = new ::byte[width*height];
 
-    Decode_grey(Image2, im, width, height, width, height, 0, 0, false, true); // put false to not make appear the little squares.
+    Decode_grey(Image2, im1, width, height, width, height, 0, 0, false, true); // put false to not make appear the little squares.
+
+    // Display image
+    Imagine::putGreyImage(0, 0, Image2, width, height);
+
+    Imagine::endGraphics();
+
+//_________________________________________________________
+
+    image_file = (argc>2)? argv[2]: default_image_file1;
+    cout << "Loading image: " << image_file << endl; 
+    if(! Imagine::loadGreyImage(image_file, image, width, height)) {
+        cerr << "Error loading image file " << image_file << endl;
+        return 1;
+    }
+
+    // Print statistics
+    cout << "Image size: " << width << "x" << height << endl;
+    cout << "Number of pixels: " << width*height << endl;
+
+    Imagine::Window window2 = Imagine::openWindow(width, height);
+    Imagine::setActiveWindow(window2);
+
+    // Display im 2
+    Imagine::putGreyImage(0, 0, image, width, height);
+
+    Imagine::endGraphics(); 
+
+    QuadTree<::byte>* im2 = Encode_grey(image, width, height, 0, 0, width, height, 100, true);
+
+    //display<bool>(im);
+
+    Image2 = new ::byte[width*height];
+
+    Decode_grey(Image2, im2, width, height, width, height, 0, 0, false, true); // put false to not make appear the little squares.
+
+    // Display image
+    Imagine::putGreyImage(0, 0, Image2, width, height);
+
+    Imagine::endGraphics();
+
+  //_________________________________________________________________________
+
+    image_file = (argc>1)? argv[1]: default_image_file2;
+    cout << "Loading image: " << image_file << endl; 
+    if(! Imagine::loadGreyImage(image_file, image, width, height)) {
+        cerr << "Error loading image file " << image_file << endl;
+        return 1;
+    }
+
+    // Print statistics
+    cout << "Image size: " << width << "x" << height << endl;
+    cout << "Number of pixels: " << width*height << endl;
+
+    Imagine::Window window3 = Imagine::openWindow(width, height);
+    Imagine::setActiveWindow(window3);
+
+    // Display im 2
+    Imagine::putGreyImage(0, 0, image, width, height);
+
+    Imagine::endGraphics(); 
+
+    QuadTree<bool>* im3 = Encode(image, width, height, 0, 0, width, height, true);
+
+    //display<bool>(im);
+
+    Image2 = new ::byte[width*height];
+
+    Decode(Image2, im3, width, height, width, height, 0, 0, true, true); // put false to not make appear the little squares.
 
     // Display image
     Imagine::putGreyImage(0, 0, Image2, width, height);
