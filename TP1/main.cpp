@@ -28,7 +28,7 @@ int main(){
         }   
 
         Matrice E,F;
-        E.resize(5,5);
+        E.resize(5,5);// test for error : change to 5,6 to make it possible 
         F.resize(6,2);
         for (int k=0; k<5; k++){
             E(k,k)=3;

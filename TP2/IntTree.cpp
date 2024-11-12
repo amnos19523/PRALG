@@ -186,6 +186,13 @@ void IntTree::visTreeIm(){ //inutile
         printf("\n");
         for (int l =0; l<tree_size[k]; l++){
             printf("|%d|", tree[k][l]);
+
+        }
+    }
+    for (int k =0; k<(depth()-1);k++){
+        printf("\n");
+        for (int l =0; l<tree_size[k]; l++){
+            printf("|%d|", tree[depth()+k][l]);
         }
     }
     printf("\n");

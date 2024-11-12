@@ -1,0 +1,18 @@
+cmake_minimum_required(VERSION 3.10)
+project(ZipImage)
+
+
+if(LINUX)
+        find_package(Imagine REQUIRED COMPONENTS Graphics)
+        add_subdirectory(quadtree)
+        #set(CMAKE_CXX_STANDARD 11)
+	add_executable(zipimage zipimage.cpp quadtree/quadtree.h)
+        target_link_libraries(zipimage Imagine::Graphics)
+else()
+        set(QT_DIR "C:/ENPC/5.15.2/mingw81_64/lib/cmake/Qt5")
+        set(Qt5_DIR "C:/ENPC/5.15.2/mingw81_64/lib/cmake/Qt5")
+        find_package(Imagine REQUIRED COMPONENTS Graphics)
+        add_subdirectory(quadtree)
+        add_executable(zipimage zipimage.cpp quadtree/quadtree.h)
+        target_link_libraries(zipimage Imagine::Graphics)
+endif()
