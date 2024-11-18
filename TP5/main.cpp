@@ -10,7 +10,7 @@ int main(){
     for (int k=0; k<degree; k++){
         coefs[k] = 1;
     }
-    Fonction* fonctionun = new Polynome(coefs, 5);
+    Fonction* fonctionun = new Polynome(coefs, degree);
     printf("%f\n", (*fonctionun)(52.7));
     Fonction* deriveeun;
     deriveeun = fonctionun->derivee();
@@ -36,6 +36,16 @@ int main(){
     Randomder3 = Randomder2->derivee();
     printf("%f\n", (*Randomder3)(2));
     printf("%f\n", Randomder2->inverse(35));
+
+    Fonction* exo1;
+    float* coefi = new float[4];
+    coefi[0]=0;
+    coefi[1]=0;
+    coefi[2]=0;
+    coefi[3]=1;
+    exo1 = new Polynome(coefi, 4);
+    printf("%f\n", exo1->inverse(27));
+    printf("%f\n", 4*tang->inverse(1));
     return 1; 
 
 }

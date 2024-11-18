@@ -6,7 +6,7 @@
 
 float Fonction::inverse(float y) const{
     int count(0);
-    double x = 0;
+    double x = 1;
     double diff=1;
     while((std::abs(diff) > 0.00001)&&(count<100)){
         diff = (y-(*this)(x))/(*(this->derivee()))(x);
