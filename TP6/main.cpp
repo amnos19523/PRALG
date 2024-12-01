@@ -89,6 +89,9 @@ int dist_iter_mem (const char* mot1, const char* mot2, int i, int j){
     
 }
 
+
+int display_path(const char* mot1, const char* mot2, int i, int j, int** memo){return 0;}
+
 int main(){
 
     const char*a = "gendarmes";
