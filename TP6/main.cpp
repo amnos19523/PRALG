@@ -3,8 +3,9 @@
 #include <algorithm>
 #include <iostream>
 #include <ctime>
+#include <utility>
 
-int dist_recur_mem (const char* mot1, const char* mot2, int i, int j, int** memo = nullptr) {
+int dist_recur_mem (const char* mot1, const char* mot2, int i, int j, int** memo = nullptr, bool Damerau = false) {
     
     if (memo != nullptr && memo[i][j] != -1){
         //printf("h\n");
@@ -27,8 +28,20 @@ int dist_recur_mem (const char* mot1, const char* mot2, int i, int j, int** memo
 
         cost = (mot1[i-1] == mot2[j-1]) ? 0 : 1;
 
-        int result = std::min(1+std::min(dist_recur_mem(mot1, mot2, i-1,j, memo),
-        dist_recur_mem(mot1, mot2, i, j-1, memo)),dist_recur_mem(mot1, mot2, i-1, j-1, memo)+cost);
+        bool swap = false;
+
+        if (i>1 && j>1 && Damerau){
+                swap = (mot1[i-2]==mot2[j-1]&&mot1[i-1]==mot2[j-2])? true : false;
+                //printf("%s\n", swap ? "true" : "false");
+            }
+
+        int result = std::min(1+std::min(dist_recur_mem(mot1, mot2, i-1,j, memo, Damerau),
+        dist_recur_mem(mot1, mot2, i, j-1, memo, Damerau)),dist_recur_mem(mot1, mot2, i-1, j-1, memo, Damerau)+cost);
+
+        if (Damerau&&swap){
+            result = std::min(result,1+ dist_recur_mem(mot1, mot2, i-2, j-2, memo, Damerau));
+            swap=false;
+        }
 
         //printf("%i", result); 
         if (memo!=nullptr){
@@ -40,14 +53,14 @@ int dist_recur_mem (const char* mot1, const char* mot2, int i, int j, int** memo
     }
 }
 
-int dist_iter_mem (const char* mot1, const char* mot2, int i, int j){
+int dist_iter_mem (const char* mot1, const char* mot2, int i, int j, bool Damerau = false){
 
     //initialisation memo
     int** memo = new int*[i+1];
     for (int k=0; k<=i; k++){
         memo[k] = new int[j+1];
     }
-
+    bool swap = false;
     //itération
     for (int k=0; k<=i; k++){
         for (int l=0; l<=j; l++){
@@ -55,8 +68,13 @@ int dist_iter_mem (const char* mot1, const char* mot2, int i, int j){
                 memo[k][l] = std::max(k,l);
             }
             else{
+                if (k>1 && l>1 && Damerau){
+                swap = (mot1[k-2]==mot2[l-1]&&mot1[k-1]==mot2[l-2])? true : false;
+                }
                 int cost = (mot1[k-1] == mot2[l-1]) ? 0 : 1 ;
                 memo[k][l] = std::min(1+std::min(memo[k-1][l],memo[k][l-1]),memo[k-1][l-1]+cost);
+                if(swap){memo[k][l] = std::min(memo[k][l],memo[k-2][l-2]+1);
+                swap = false;}
             }
         }
     }
@@ -133,8 +151,21 @@ void exch_letter(char* mot, int length, const char letter, int pos){
     printf("\n");
 }
 
+void swap_letter(char* mot, int length, int pos){
+    for (int k=0; k<pos; k++){
+        printf("%c",mot[k]);
+    }
+    printf("(%c<->%c)", mot[pos], mot[pos+1]);
+    for (int k = pos+2; k<length; k++){
+        printf("%c", mot[k]);
+    }
+    std::swap(mot[pos],mot[pos+1]);
+    std::cout<< " : " << mot;
+    printf("\n");
+}
 
-int display_path(const char* mot1, const char* mot2, int i, int j, int** memo){
+
+int display_path(const char* mot1, const char* mot2, int i, int j, int** memo, bool Damerau = false){
 
     //create copy of mot 2
     int max = std::max(i,j)+1;
@@ -148,10 +179,13 @@ int display_path(const char* mot1, const char* mot2, int i, int j, int** memo){
 
 
     //int distance = dist_iter_mem(mot1, mot2, i, j);
-    int nord, ouest, n_w, actuel;
+    int nord, ouest, n_w, actuel, swap;
     
     while (i+j != 0){
         actuel  = memo[i][j];
+
+        if (Damerau && mot1[i-2]==mot2[j-1]&&mot1[i-1]==mot2[j-2]&&memo[i-2][j-2]==swap+1)
+
         if (i!=0){
            nord = memo[i-1][j]; 
         }
@@ -163,6 +197,12 @@ int display_path(const char* mot1, const char* mot2, int i, int j, int** memo){
         }
         else{
             ouest = i+2;    // chemin impossible
+        }
+        if (i>1&&j>1&&Damerau){
+            swap = memo[i-2][j-2];
+        }
+        else{
+            swap = actuel + 2; //chemin impossible
         }
         if (j!=0 && i!=0){
             n_w = memo[i-1][j-1];
@@ -176,15 +216,22 @@ int display_path(const char* mot1, const char* mot2, int i, int j, int** memo){
             add_letter(mod_word, max, mot1[i],j);
         }
         else{
-            if(ouest+1 == actuel){
-                j--;
-                del_letter(mod_word, max, j);
+
+            if (Damerau && mot1[i-2]==mot2[j-1]&&mot1[i-1]==mot2[j-2]&& swap+1==actuel ){
+                j--;j--;i--;i--;
+                swap_letter(mod_word, max, j);
             }
             else{
-                i--;
-                j--;
-                if(actuel != n_w){
-                    exch_letter(mod_word, max, mot1[i], j);
+                if(ouest+1 == actuel){
+                    j--;
+                    del_letter(mod_word, max, j);
+                }
+                else{
+                    i--;
+                    j--;
+                    if(actuel != n_w){
+                        exch_letter(mod_word, max, mot1[i], j);
+                    }
                 }
             }
         }
@@ -197,16 +244,16 @@ int display_path(const char* mot1, const char* mot2, int i, int j, int** memo){
 
 int main(){
 
-    const char*a = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.";
-    const char*b = "la vie n'est pas un long fleuve";
+    const char*a = "ecoles";
+    const char*b = "eclose";
     printf(a);
     printf("\n");
     printf(b);
     printf("\n");
 
 
-    const int len_word_a = 74;
-    const int len_word_b = 32;
+    const int len_word_a = 7;
+    const int len_word_b = 7;
 
 
     int** memo = new int*[len_word_a+1];
@@ -223,11 +270,12 @@ int main(){
     
     // avec et sans memoïsation 
     clock_t t1 = clock();
-    //printf("\ndistance is %i\n", dist_recur_mem(a,b,len_word_a,len_word_b));
+    printf("\ndistance is (no memo recursive) : %i\n", dist_recur_mem(a,b,len_word_a,len_word_b));
     clock_t t2 = clock();
-    printf("\ndistance is %i\n", dist_recur_mem(a,b,len_word_a,len_word_b,memo));
+    printf("\ndistance is (memo DL recursive) : %i\n", dist_recur_mem(a,b,len_word_a,len_word_b,memo, true));
     clock_t t3 = clock();
 
+    printf("\nmemo table : \n");
     for (int k=0; k<=len_word_a; k++){
         std::cout<<'[';
         for (int l=0; l<=len_word_b; l++){
@@ -236,6 +284,7 @@ int main(){
         std::cout <<']' <<std::endl;
     }
 
+    printf("\ntime for recursive with and without memo : \n");
     std::cout<<(t2-t1)/(float)CLOCKS_PER_SEC<<std::endl<<(t3-t2)/(float)CLOCKS_PER_SEC<<std::endl;
     // complexité sans mémoïsation est exponentielle et du même ordre en mémoire.
     // la complexité avec mémoïsation est linéaire O(m*n) avec le même ordre en mémoire.
@@ -243,9 +292,13 @@ int main(){
     // la version sans mémoïsation est inutilisable au bout d'un moment.
 
     clock_t t4 = clock();
-    printf("\ndistance is %i\n", dist_iter_mem(a,b,len_word_a,len_word_b));
+    printf("\nDL distance is %i\n", dist_iter_mem(a,b,len_word_a,len_word_b,true));
     clock_t t5 = clock();
 
+    printf("\nL distance is %i\n", dist_iter_mem(a,b,len_word_a,len_word_b,false));
+
+
+    printf("\ntime for iterative DL distance :\n");
     std::cout<<(t5-t4)/(float)CLOCKS_PER_SEC<<std::endl;
 
     // La complexité est de O(m*n) aussi .la mémoire aussi est de l'ordre de m*n. 
@@ -253,7 +306,11 @@ int main(){
     // A grande échelle, le temps est plus court pour la version itérative.
 
     // affichage des étapes : memo utilisé construit plus haut avec la version récurssive
-    display_path(a, b, len_word_a, len_word_b, memo);
+    std::cout<<std::endl<<"steps: "<<std::endl<<std::endl;
+
+    //printf("\n\nsteps\n\n"); //<-- uncomment this to see magic
+
+    display_path(a, b, len_word_a, len_word_b, memo, true);
 
 
 
