@@ -184,7 +184,7 @@ int display_path(const char* mot1, const char* mot2, int i, int j, int** memo, b
     while (i+j != 0){
         actuel  = memo[i][j];
 
-        if (Damerau && mot1[i-2]==mot2[j-1]&&mot1[i-1]==mot2[j-2]&&memo[i-2][j-2]==swap+1)
+        //if (Damerau && mot1[i-2]==mot2[j-1]&&mot1[i-1]==mot2[j-2]&&memo[i-2][j-2]==swap+1)
 
 
         // gérer les cas limites
@@ -220,15 +220,15 @@ int display_path(const char* mot1, const char* mot2, int i, int j, int** memo, b
             add_letter(mod_word, max, mot1[i],j);
         }
         else{
-
-            if (Damerau && mot1[i-2]==mot2[j-1]&&mot1[i-1]==mot2[j-2]&& swap+1==actuel ){
-                j--;j--;i--;i--;
-                swap_letter(mod_word, max, j);
+            if(ouest+1 == actuel){
+                //printf("%i, %i, %i:",ouest, nord, actuel);
+                j--;
+                del_letter(mod_word, max, j);
             }
-            else{
-                if(ouest+1 == actuel){
-                    j--;
-                    del_letter(mod_word, max, j);
+            else{            
+                if (Damerau && mot1[i-2]==mot2[j-1]&&mot1[i-1]==mot2[j-2]&& swap+1==actuel ){
+                    j--;j--;i--;i--;
+                    swap_letter(mod_word, max, j);
                 }
                 else{
                     i--;
@@ -237,6 +237,7 @@ int display_path(const char* mot1, const char* mot2, int i, int j, int** memo, b
                         exch_letter(mod_word, max, mot1[i], j);
                     }
                 }
+
             }
         }
 
@@ -340,9 +341,41 @@ int main(){
     // affichage des étapes : memo utilisé construit plus haut avec la version récurssive
     std::cout<<std::endl<<"steps: "<<std::endl<<std::endl;
 
-    //printf("\n\nsteps\n\n"); //<-- uncomment this to see magic
-
     display_path(a, b, len_word_a, len_word_b, memo, true);
+
+    // display path for levenstein : 
+
+    //initialise memo
+
+    int** memo2 = new int*[len_word_a+1];
+    
+    for (int k=0; k<=len_word_a; k++){
+        memo2[k] = new int[len_word_b+1];
+    }
+    for (int k=0; k<=len_word_a; k++){
+        for (int l=0; l<=len_word_b; l++){
+            memo2[k][l] = -1;
+        }
+    }
+    // constructing memo : 
+    dist_recur_mem(a,b,len_word_a,len_word_b,memo2);
+
+    printf("\nmemo table : \n");
+    for (int k=0; k<=len_word_a; k++){
+        std::cout<<'[';
+        for (int l=0; l<=len_word_b; l++){
+            std::cout <<memo2[k][l];
+        }
+        std::cout <<']' <<std::endl;
+    }
+
+
+    //display path : 
+    std::cout<<std::endl<<"steps: "<<std::endl<<std::endl;
+
+
+    display_path(a, b, len_word_a, len_word_b, memo2);
+
 
 
     std::cout<< "\nbonus : \n";
