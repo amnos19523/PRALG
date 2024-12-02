@@ -242,6 +242,34 @@ int display_path(const char* mot1, const char* mot2, int i, int j, int** memo, b
     return 0;
 }   
 
+
+int bonus_iter(const char* mot1, const char* mot2, int i, int j){
+    int * memo1 = new int[i+1];
+    int * memo2 = new int[i+1];
+    int height = j;
+
+    //initialize
+    for (int k =0; k<=i; k++){
+        memo2[k] = k;
+    }
+    for(int height = 1; height<=j; height++){
+        delete[] memo1;
+        memo1 = memo2;
+        memo2 = new int[i+1];
+        memo2[0] = height;
+        for (int width=1; width<=i; width++){
+            int cout = (mot1[width-1]==mot2[height-1])? 0:1;
+            memo2[width] = std::min(1 + std::min(memo2[width-1],memo1[width]),cout + memo1[width-1]);
+        }
+    }
+    int result = memo2[i];
+    delete []memo1;
+    delete []memo2;
+    return result;
+}
+
+
+
 int main(){
 
     const char*a = "ecoles";
@@ -312,6 +340,10 @@ int main(){
 
     display_path(a, b, len_word_a, len_word_b, memo, true);
 
+
+    std::cout<< "\nbonus : \n";
+
+    std::cout<<bonus_iter(a, b, len_word_a, len_word_b)<<std::endl;
 
 
     return 0;
