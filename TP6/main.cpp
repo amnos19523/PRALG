@@ -186,6 +186,8 @@ int display_path(const char* mot1, const char* mot2, int i, int j, int** memo, b
 
         if (Damerau && mot1[i-2]==mot2[j-1]&&mot1[i-1]==mot2[j-2]&&memo[i-2][j-2]==swap+1)
 
+
+        // gérer les cas limites
         if (i!=0){
            nord = memo[i-1][j]; 
         }
@@ -211,6 +213,8 @@ int display_path(const char* mot1, const char* mot2, int i, int j, int** memo, b
             n_w=2+std::max(i,j);    // chemin impossible
         }
 
+
+        //retrouver par chemin inverse (on aurait pu trouver Levenstein par chemin droit, par exmple si on avait memoisé à l'envers...)
         if ( nord+1 == actuel){
             i--;
             add_letter(mod_word, max, mot1[i],j);
