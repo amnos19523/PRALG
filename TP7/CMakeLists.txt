@@ -1,0 +1,17 @@
+cmake_minimum_required(VERSION 3.10)
+project(TP7)
+
+
+if(LINUX)
+        find_package(Imagine REQUIRED COMPONENTS Graphics)
+        #set(CMAKE_CXX_STANDARD 11)
+	add_executable(TP7.0 example example.cpp town.cpp town.h point2d.cpp point2d.h)
+        add_executable(TP7.1 isotopo isotopo.cpp town.cpp town.h point2d.cpp point2d.h)
+        target_link_libraries(TP7.0 Imagine::Graphics)
+else()
+        set(QT_DIR "C:/ENPC/5.15.2/mingw81_64/lib/cmake/Qt5")
+        set(Qt5_DIR "C:/ENPC/5.15.2/mingw81_64/lib/cmake/Qt5")
+        find_package(Imagine REQUIRED COMPONENTS Graphics)
+        add_executable(TP7 main.cpp)
+        target_link_libraries(TP7 Imagine::Graphics)
+endif()
